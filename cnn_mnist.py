@@ -20,7 +20,7 @@ def run():
     n_classes = np.unique(y_train).size
 
     # Downsample training data
-    n_train_samples = 3000
+    n_train_samples = 100 #3000
     train_idxs = np.random.random_integers(0, split-1, n_train_samples)
     X_train = X_train[train_idxs, ...]
     y_train = y_train[train_idxs, ...]
@@ -65,9 +65,10 @@ def run():
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 
-    # Evaluate on test data
-    error = nn.error(X_test, y_test)
-    print('Test error rate: %.4f' % error)
+    if False:
+        # Evaluate on test data
+        error = nn.error(X_test, y_test)
+        print('Test error rate: %.4f' % error)
 
 
 if __name__ == '__main__':

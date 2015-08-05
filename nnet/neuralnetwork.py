@@ -1,5 +1,6 @@
 import numpy as np
 import scipy as sp
+import cPickle, os
 from .layers import ParamMixin
 from .helpers import one_hot, unhot
 
@@ -24,6 +25,7 @@ class NeuralNetwork:
 
     def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64):
         """ Train network on the given data. """
+        self.load_file()
         n_samples = Y.shape[0]
         n_batches = n_samples // batch_size
         Y_one_hot = one_hot(Y)
@@ -33,6 +35,7 @@ class NeuralNetwork:
         while iter < max_iter:
             iter += 1
             for b in range(n_batches):
+                print (str(b + 1) + " from " + str(n_batches) +" batches, iter " + str(iter))
                 batch_begin = b*batch_size
                 batch_end = batch_begin+batch_size
                 X_batch = X[batch_begin:batch_end]
@@ -57,9 +60,11 @@ class NeuralNetwork:
                             param -= learning_rate*inc
 
             # Output training status
+            print("find loss and error")
             loss = self._loss(X, Y_one_hot)
             error = self.error(X, Y)
             print('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
+            self.save_file()
 
     def _loss(self, X, Y_one_hot):
         X_next = X
@@ -116,3 +121,39 @@ class NeuralNetwork:
                     param_init = np.ravel(np.copy(param))
                     err = sp.optimize.check_grad(fun, grad_fun, param_init)
                     print('diff %.2e' % err)
+                    
+    def save_file(self):
+        W = []
+        b = []
+        level = 0
+        for layer in self.layers:
+            level += 1
+            if isinstance(layer, ParamMixin):
+                W, b = layer.params()
+                # pickle W and b
+                f1 = file(str('../nn/weights'+ str(level) +'.save'), 'wb')
+                cPickle.dump(W, f1, protocol=cPickle.HIGHEST_PROTOCOL)
+                f1.close()
+                f2 = file(str('../nn/bias'+ str(level) +'.save'), 'wb')
+                cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
+                f2.close()
+        
+        
+    def load_file(self):
+        level = 0
+        for layer in self.layers:
+            level += 1
+            if isinstance(layer, ParamMixin):
+                path1 = str("../nn/weights" + str(level) + ".save")
+                if os.path.exists(path1):
+                    f1 = file(path1, 'rb')
+                    loaded_obj1 = cPickle.load(f1)
+                    f1.close()
+                    layer.W = loaded_obj1
+                path2 = str("../nn/bias" + str(level) + ".save")
+                if os.path.exists(path2):
+                    f2 = file(path2, 'rb')
+                    loaded_obj2 = cPickle.load(f2)
+                    f2.close()
+                    layer.b = loaded_obj2
+        
