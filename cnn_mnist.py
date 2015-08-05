@@ -4,10 +4,12 @@
 import time
 import numpy as np
 import sklearn.datasets
-import nnet
-
+import nnet.neuralnetwork as cnnet
+import nnet.convnet.layers as conv
+import nnet.layers as lnnet
 
 def run():
+    #conv.conv.print_test()
     # Fetch data
     mnist = sklearn.datasets.fetch_mldata('MNIST original', data_home='./data')
     split = 60000
@@ -24,36 +26,36 @@ def run():
     y_train = y_train[train_idxs, ...]
 
     # Setup convolutional neural network
-    nn = nnet.NeuralNetwork(
+    nn = cnnet.NeuralNetwork(
         layers=[
-            nnet.Conv(
+            conv.Conv(
                 n_feats=12,
                 filter_shape=(5, 5),
                 strides=(1, 1),
                 weight_scale=0.1,
                 weight_decay=0.001,
             ),
-            nnet.Activation('relu'),
-            nnet.Pool(
+            lnnet.Activation('relu'),
+            conv.Pool(
                 pool_shape=(2, 2),
                 strides=(2, 2),
                 mode='max',
             ),
-            nnet.Conv(
+            conv.Conv(
                 n_feats=16,
                 filter_shape=(5, 5),
                 strides=(1, 1),
                 weight_scale=0.1,
                 weight_decay=0.001,
             ),
-            nnet.Activation('relu'),
-            nnet.Flatten(),
-            nnet.Linear(
+            lnnet.Activation('relu'),
+            conv.Flatten(),
+            lnnet.Linear(
                 n_out=n_classes,
                 weight_scale=0.1,
                 weight_decay=0.02,
             ),
-            nnet.LogRegression(),
+            lnnet.LogRegression(),
         ],
     )
 

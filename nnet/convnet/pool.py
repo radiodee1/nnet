@@ -1,5 +1,6 @@
 from __future__ import division
 import numpy as np
+from numpy import ndarray #, float_t
 #import cython
 #cimport numpy as np
 
@@ -8,7 +9,7 @@ import numpy as np
 #ctypedef np.float_t np.float_t
 #ctypedef Py_ssize_t uint
 
-def np.float_t_max( a, b): return a if a >= b else b
+def float_t_max( a, b): return a if a >= b else b
 
 def int_max(a, b): return a if a >= b else b
 def int_min(a, b): return a if a <= b else b
@@ -16,16 +17,21 @@ def int_min(a, b): return a if a <= b else b
 
 #@cython.boundscheck(False)
 #@cython.wraparound(False)
-def pool_bc01(np.ndarray[np.float_t, ndim=4] imgs,
-              np.ndarray[np.float_t, ndim=4] poolout,
-              np.ndarray[np.int_t, ndim=5] switches,
-              uint pool_h, uint pool_w, uint stride_y, uint stride_x):
+def pool_bc01(imgs,
+              poolout,
+              switches,
+              pool_h, pool_w, stride_y, stride_x):
     """ Multi-image, multi-channel pooling
     imgs has shape (n_imgs, n_channels, img_h, img_w)
     poolout has shape (n_imgs, n_channels, img_h//stride_y, img_w//stride_x)
     switches has shape (n_imgs, n_channels, img_h//stride_y, img_w//stride_x, 2)
     """
     # TODO: mean pool
+    print "pool"
+
+    imgs = ndarray(shape=imgs.shape, dtype=float, buffer=imgs)
+    poolout = ndarray(shape=poolout.shape, dtype=float, buffer=poolout)
+    switches = ndarray(shape=switches.shape, dtype=int, buffer=switches)
 
     n_imgs = imgs.shape[0]
     n_channels = imgs.shape[1]
@@ -49,12 +55,12 @@ def pool_bc01(np.ndarray[np.float_t, ndim=4] imgs,
     if not switches.shape[4] == 2:
         raise ValueError('switches should only have length 2 in the 5. dimension.')
 
-    i, c, y, x, y_out, x_out
-    y_min, y_max, x_min, x_max
-    img_y, img_x
+    i, c, y, x, y_out, x_out = 0,0,0,0,0,0
+    y_min, y_max, x_min, x_max = 0,0,0,0
+    img_y, img_x = 0,0
     img_y_max = 0
     img_x_max = 0
-    value, new_value
+    value, new_value = 0,0
 
     for i in range(n_imgs):
         for c in range(n_channels):
@@ -81,16 +87,23 @@ def pool_bc01(np.ndarray[np.float_t, ndim=4] imgs,
 
 #@cython.boundscheck(False)
 #@cython.wraparound(False)
-def bprop_pool_bc01(np.ndarray[np.float_t, ndim=4] poolout_grad,
-                    np.ndarray[np.int_t, ndim=5] switches,
-                    np.ndarray[np.float_t, ndim=4] imgs_grad):
+def bprop_pool_bc01( poolout_grad, switches, imgs_grad):
+                    
+    #                np.ndarray[np.float_t, ndim=4] poolout_grad,
+    #                np.ndarray[np.int_t, ndim=5] switches,
+    #                np.ndarray[np.float_t, ndim=4] imgs_grad):
+
+    print "bprop pool"
+    poolout_grad = ndarray(shape=poolout_grad.shape,dtype=float, buffer=poolout_grad)
+    switches = ndarray(shape=switches.shape,dtype=int, buffer=switches)
+    imgs_grad = ndarray(shape=imgs_grad.shape,dtype=float, buffer=imgs_grad)
 
     n_imgs = poolout_grad.shape[0]
     n_channels = poolout_grad.shape[1]
     poolout_h = poolout_grad.shape[2]
     poolout_w = poolout_grad.shape[3]
 
-    i, c, y, x, img_y, img_x
+    i, c, y, x, img_y, img_x = 0,0,0,0,0,0
 
     imgs_grad[...] = 0
     for i in range(n_imgs):
