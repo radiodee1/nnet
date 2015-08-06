@@ -75,9 +75,11 @@ def run():
     nn._setup(X, Y)
     nn.load_file(name=name)
     
-    print "stored value: " + str( int(y_train[0]))
+    ## the following two lines are just for textual display
     X_disp = shape_x(X_train[0][0])
     show_xvalues([X_disp], index=0)
+    
+    print "stored value: " + str( int(y_train[0]))
     print Y
     print("prediction: " + str( nn.predict(X)[0]))
     
