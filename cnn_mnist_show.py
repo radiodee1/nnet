@@ -65,7 +65,7 @@ def run():
 
     
 
-    Y_one_hot = numeric_matrix(y_train[0], n_classes) 
+    Y_one_hot = numeric_ymatrix(y_train[0], n_classes) 
     Y_one_hot = np.array(Y_one_hot)
     
     X = X_train[0][0]
@@ -93,7 +93,7 @@ def shape_x(x):
                 xx.append(0)
     return xx
 
-def numeric_matrix(y, ln = 10):
+def numeric_ymatrix(y, ln = 10):
     lst = []
     for i in range(ln):
         if i == y:
