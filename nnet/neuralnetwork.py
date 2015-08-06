@@ -167,7 +167,7 @@ class NeuralNetwork:
                     f2.close()
                     self.layers[i].b = loaded_obj2
                     print ("load " + path2)
-                if True:
+                if False:
                     path3 = str("../nn/"+name+"-d-weights" + str(i+1) + ".save")
                     if os.path.exists(path3):
                         f3 = file(path3, 'rb')
