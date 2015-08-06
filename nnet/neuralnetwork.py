@@ -60,7 +60,7 @@ class NeuralNetwork:
                             param -= learning_rate*inc
 
             # Output training status
-            print("find loss and error")
+            print("\nfind loss and error")
             loss = self._loss(X, Y_one_hot)
             error = self.error(X, Y)
             print('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
@@ -122,7 +122,7 @@ class NeuralNetwork:
                     err = sp.optimize.check_grad(fun, grad_fun, param_init)
                     print('diff %.2e' % err)
                     
-    def save_file(self):
+    def save_file(self, name = "mnist"):
         W = []
         b = []
         level = 0
@@ -131,30 +131,53 @@ class NeuralNetwork:
             if isinstance(layer, ParamMixin):
                 W, b = layer.params()
                 # pickle W and b
-                f1 = file(str('../nn/weights'+ str(level) +'.save'), 'wb')
+                f1 = file(str('../nn/'+name+'-weights'+ str(level) +'.save'), 'wb')
                 cPickle.dump(W, f1, protocol=cPickle.HIGHEST_PROTOCOL)
                 f1.close()
-                f2 = file(str('../nn/bias'+ str(level) +'.save'), 'wb')
+                f2 = file(str('../nn/'+name+'-bias'+ str(level) +'.save'), 'wb')
                 cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
                 f2.close()
+                if True:
+                    # pickle W and b
+                    f3 = file(str('../nn/'+name+'-d-weights'+ str(level) +'.save'), 'wb')
+                    cPickle.dump(layer.dW, f3, protocol=cPickle.HIGHEST_PROTOCOL)
+                    f3.close()
+                    f4 = file(str('../nn/'+name+'-d-bias'+ str(level) +'.save'), 'wb')
+                    cPickle.dump(layer.db, f4, protocol=cPickle.HIGHEST_PROTOCOL)
+                    f4.close()
         
         
-    def load_file(self):
+    def load_file(self, name = "mnist"):
         #print len(self.layers)
         for i in range(len(self.layers)):
             if isinstance(self.layers[i], ParamMixin):
-                path1 = str("../nn/weights" + str(i+1) + ".save")
+                path1 = str("../nn/"+name+"-weights" + str(i+1) + ".save")
                 if os.path.exists(path1):
                     f1 = file(path1, 'rb')
                     loaded_obj1 = cPickle.load(f1)
                     f1.close()
                     self.layers[i].W = loaded_obj1
                     print ("load " + path1)
-                path2 = str("../nn/bias" + str(i+1) + ".save")
+                path2 = str("../nn/"+name+"-bias" + str(i+1) + ".save")
                 if os.path.exists(path2):
                     f2 = file(path2, 'rb')
                     loaded_obj2 = cPickle.load(f2)
                     f2.close()
                     self.layers[i].b = loaded_obj2
                     print ("load " + path2)
-        
+                if True:
+                    path3 = str("../nn/"+name+"-d-weights" + str(i+1) + ".save")
+                    if os.path.exists(path3):
+                        f3 = file(path3, 'rb')
+                        loaded_obj3 = cPickle.load(f3)
+                        f3.close()
+                        self.layers[i].dW = loaded_obj3
+                        print ("load " + path3)
+                    path4 = str("../nn/"+name+"-d-bias" + str(i+1) + ".save")
+                    if os.path.exists(path4):
+                        f4 = file(path4, 'rb')
+                        loaded_obj4 = cPickle.load(f4)
+                        f4.close()
+                        self.layers[i].db = loaded_obj4
+                        print ("load " + path4)
+            
