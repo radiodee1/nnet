@@ -63,32 +63,25 @@ def run():
         ],
     )
 
-    X = X_train[0][0]
-    n_samples = y_train.shape[0]
-    n_batches = n_train_samples 
-    print len(y_train), y_train
-    Y_one_hot = numeric_matrix(y_train[0], n_classes) 
-    print Y_one_hot
-    Y_one_hot = np.array(Y_one_hot)
-    X_disp = shape_x(X)
-
-    # Train neural network
-    t0 = time.time()
     
-    show_xvalues([X_disp], index=0)
+
+    Y_one_hot = numeric_matrix(y_train[0], n_classes) 
+    Y_one_hot = np.array(Y_one_hot)
+    
+    X = X_train[0][0]
     X = np.reshape(X,(-1,1,28,28))
     Y = np.reshape(Y_one_hot,(1,10))
+    
     nn._setup(X, Y)
     nn.load_file(name=name)
-    print Y
-    #X_next = X
-    #for layer in nn.layers:
-    #    X_next = layer.fprop(X_next)
-    #Y_pred = unhot(X_next)
-    print("prediction: " , nn.predict(X)[0])
     
-    t1 = time.time()
-    print('Duration: %.1fs' % (t1-t0))
+    print "stored value: " + str( int(y_train[0]))
+    X_disp = shape_x(X_train[0][0])
+    show_xvalues([X_disp], index=0)
+    print Y
+    print("prediction: " + str( nn.predict(X)[0]))
+    
+
 
 def shape_x(x):
     xx = []
