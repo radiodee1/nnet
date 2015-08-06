@@ -22,6 +22,8 @@ def run():
     # Downsample training data
     n_train_samples = 100 #3000
     train_idxs = np.random.random_integers(0, split-1, n_train_samples)
+    #train_idxs = np.array([i for i in range(n_train_samples)])
+    print (train_idxs)
     X_train = X_train[train_idxs, ...]
     y_train = y_train[train_idxs, ...]
 
