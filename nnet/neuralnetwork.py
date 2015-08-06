@@ -35,7 +35,7 @@ class NeuralNetwork:
         while iter < max_iter:
             iter += 1
             for b in range(n_batches):
-                print (str(b + 1) + " from " + str(n_batches) +" batches, iter " + str(iter))
+                print (str(b + 1) + " of " + str(n_batches) +" batches, iter " + str(iter))
                 batch_begin = b*batch_size
                 batch_end = batch_begin+batch_size
                 X_batch = X[batch_begin:batch_end]
@@ -143,16 +143,18 @@ class NeuralNetwork:
         #print len(self.layers)
         for i in range(len(self.layers)):
             if isinstance(self.layers[i], ParamMixin):
-                path1 = str("../nn/weights" + str(i) + ".save")
+                path1 = str("../nn/weights" + str(i+1) + ".save")
                 if os.path.exists(path1):
                     f1 = file(path1, 'rb')
                     loaded_obj1 = cPickle.load(f1)
                     f1.close()
                     self.layers[i].W = loaded_obj1
-                path2 = str("../nn/bias" + str(i) + ".save")
+                    print ("load " + path1)
+                path2 = str("../nn/bias" + str(i+1) + ".save")
                 if os.path.exists(path2):
                     f2 = file(path2, 'rb')
                     loaded_obj2 = cPickle.load(f2)
                     f2.close()
                     self.layers[i].b = loaded_obj2
+                    print ("load " + path2)
         
