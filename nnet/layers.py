@@ -112,6 +112,7 @@ class Activation(Layer):
 class LogRegression(Layer, LossMixin):
     """ Softmax layer with cross-entropy loss function. """
     def fprop(self, input):
+        #print input
         e = np.exp(input - np.amax(input, axis=1, keepdims=True))
         return e/np.sum(e, axis=1, keepdims=True)
 

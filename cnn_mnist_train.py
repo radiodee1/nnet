@@ -23,9 +23,9 @@ def run():
     n_train_samples = 100 #3000
     train_idxs = np.random.random_integers(0, split-1, n_train_samples)
     #train_idxs = np.array([i for i in range(n_train_samples)])
-    print (train_idxs)
     X_train = X_train[train_idxs, ...]
     y_train = y_train[train_idxs, ...]
+    name = "mnist"
 
     # Setup convolutional neural network
     nn = cnnet.NeuralNetwork(
@@ -63,7 +63,7 @@ def run():
 
     # Train neural network
     t0 = time.time()
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=3, batch_size=32)
+    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=3, batch_size=32, name=name)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 

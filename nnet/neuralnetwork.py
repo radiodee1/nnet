@@ -23,13 +23,13 @@ class NeuralNetwork:
             raise ValueError('Output shape %s does not match Y %s'
                              % (next_shape, Y.shape))
 
-    def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64):
+    def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64, name="mnist"):
         """ Train network on the given data. """
         n_samples = Y.shape[0]
         n_batches = n_samples // batch_size
         Y_one_hot = one_hot(Y)
         self._setup(X, Y_one_hot)
-        self.load_file()
+        self.load_file(name=name)
         iter = 0
         # Stochastic gradient descent with mini-batches
         while iter < max_iter:
@@ -64,7 +64,7 @@ class NeuralNetwork:
             loss = self._loss(X, Y_one_hot)
             error = self.error(X, Y)
             print('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
-            self.save_file()
+            self.save_file(name=name)
 
     def _loss(self, X, Y_one_hot):
         X_next = X
@@ -123,6 +123,7 @@ class NeuralNetwork:
                     print('diff %.2e' % err)
                     
     def save_file(self, name = "mnist"):
+        print ("saving " + name)
         W = []
         b = []
         level = 0
@@ -139,11 +140,12 @@ class NeuralNetwork:
                 f2.close()
                 if True:
                     # pickle W and b
+                    dW, db = layer.param_incs()
                     f3 = file(str('../nn/'+name+'-d-weights'+ str(level) +'.save'), 'wb')
-                    cPickle.dump(layer.dW, f3, protocol=cPickle.HIGHEST_PROTOCOL)
+                    cPickle.dump(dW, f3, protocol=cPickle.HIGHEST_PROTOCOL)
                     f3.close()
                     f4 = file(str('../nn/'+name+'-d-bias'+ str(level) +'.save'), 'wb')
-                    cPickle.dump(layer.db, f4, protocol=cPickle.HIGHEST_PROTOCOL)
+                    cPickle.dump(db, f4, protocol=cPickle.HIGHEST_PROTOCOL)
                     f4.close()
         
         
