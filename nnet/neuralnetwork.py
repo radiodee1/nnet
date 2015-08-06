@@ -25,11 +25,11 @@ class NeuralNetwork:
 
     def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64):
         """ Train network on the given data. """
-        self.load_file()
         n_samples = Y.shape[0]
         n_batches = n_samples // batch_size
         Y_one_hot = one_hot(Y)
         self._setup(X, Y_one_hot)
+        self.load_file()
         iter = 0
         # Stochastic gradient descent with mini-batches
         while iter < max_iter:
@@ -140,20 +140,19 @@ class NeuralNetwork:
         
         
     def load_file(self):
-        level = 0
-        for layer in self.layers:
-            level += 1
-            if isinstance(layer, ParamMixin):
-                path1 = str("../nn/weights" + str(level) + ".save")
+        #print len(self.layers)
+        for i in range(len(self.layers)):
+            if isinstance(self.layers[i], ParamMixin):
+                path1 = str("../nn/weights" + str(i) + ".save")
                 if os.path.exists(path1):
                     f1 = file(path1, 'rb')
                     loaded_obj1 = cPickle.load(f1)
                     f1.close()
-                    layer.W = loaded_obj1
-                path2 = str("../nn/bias" + str(level) + ".save")
+                    self.layers[i].W = loaded_obj1
+                path2 = str("../nn/bias" + str(i) + ".save")
                 if os.path.exists(path2):
                     f2 = file(path2, 'rb')
                     loaded_obj2 = cPickle.load(f2)
                     f2.close()
-                    layer.b = loaded_obj2
+                    self.layers[i].b = loaded_obj2
         
