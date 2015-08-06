@@ -70,21 +70,22 @@ def run():
     Y_one_hot = numeric_matrix(y_train[0], n_classes) 
     print Y_one_hot
     Y_one_hot = np.array(Y_one_hot)
-    #print len(X), X
-    X = shape_x(X)
-    #print X
-    #nn._setup(X, Y_one_hot)
-    nn.load_file(name=name)
+    X_disp = shape_x(X)
+
     # Train neural network
     t0 = time.time()
-    #nn.fit(X_train, y_train, learning_rate=0.05, max_iter=0, batch_size=32, name=name)
     
-    show_xvalues([X], index=0)
+    show_xvalues([X_disp], index=0)
     X = np.reshape(X,(-1,1,28,28))
     Y = np.reshape(Y_one_hot,(1,10))
     nn._setup(X, Y)
+    nn.load_file(name=name)
     print Y
-    print("prediction: " , nn.predict(X))
+    #X_next = X
+    #for layer in nn.layers:
+    #    X_next = layer.fprop(X_next)
+    #Y_pred = unhot(X_next)
+    print("prediction: " , nn.predict(X)[0])
     
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
