@@ -25,18 +25,26 @@ def run():
 
     signal.signal(signal.SIGINT,signal_handler)
 
-
+    n_train_samples = 100 #3000
     # Fetch data
     
     
     dset = lp.get_dataset(load_type=LOAD.ALPHA)
+    #t1, l1, files = lp.batch_load_alpha( 0,  n_train_samples, True, [], LOAD.ALPHA)
     X_train = dset[0]
     y_train = dset[1]
     
     X_train = np.reshape(X_train, (-1, 1, 28, 28))
     y_train = np.array(y_train)
+    
+    train_idxs = np.random.random_integers(0, len(dset[0])-1, n_train_samples)
+    #train_idxs = np.array([i for i in range(n_train_samples)])
+    X_train = X_train[train_idxs, ...]
+    y_train = y_train[train_idxs, ...]
+    
+    
     # Downsample training data
-    n_train_samples = 1000 #3000
+
     
     n_classes = len(lp.ascii_ymatrix(LOAD.ALPHA))
 
@@ -76,7 +84,7 @@ def run():
 
     # Train neural network
     t0 = time.time()
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=1, batch_size=32, name=name)
+    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=3, batch_size=32, name=name, load_type = LOAD.ALPHA)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 

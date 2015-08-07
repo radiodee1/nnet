@@ -27,7 +27,7 @@ class NeuralNetwork:
         """ Train network on the given data. """
         n_samples = Y.shape[0]
         n_batches = n_samples // batch_size
-        Y_one_hot = one_hot(Y)
+        Y_one_hot = one_hot(Y , load_type=load_type)
         self._setup(X, Y_one_hot)
         self.load_file(name=name)
         iter = 0
@@ -35,7 +35,8 @@ class NeuralNetwork:
         while iter < max_iter:
             iter += 1
             for b in range(n_batches):
-                print (str(b + 1) + " of " + str(n_batches) +" batches, iter " + str(iter))
+                print (str(b + 1) + " of " + str(n_batches) +" batches, iter " 
+                    + str(iter) + " with total of "+ str(max_iter))
                 batch_begin = b*batch_size
                 batch_end = batch_begin+batch_size
                 X_batch = X[batch_begin:batch_end]
@@ -91,7 +92,8 @@ class NeuralNetwork:
         """ Helper function to test the parameter gradients for
         correctness. """
         # Warning: the following is a hack
-        Y_one_hot = one_hot(Y)
+        print "check gradients..."
+        Y_one_hot = one_hot(Y) ## this line needs a load_type!!
         self._setup(X, Y_one_hot)
         for l, layer in enumerate(self.layers):
             if isinstance(layer, ParamMixin):

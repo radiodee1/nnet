@@ -9,15 +9,17 @@ import nnet.convnet.layers as conv
 import nnet.layers as lnnet
 import math, sys
 from nnet.helpers import one_hot, unhot
+import enum_local as LOAD
+import load_png_alpha as lp
 
 def run():
-    
+    load_type = LOAD.ALPHA
     #X_train, y_train = fetch_mnist_img()
-    n_classes = 10
+    n_classes = len(lp.ascii_ymatrix(load_type))
     X_setup = np.zeros(shape=(1,1,28,28))
     y_setup = np.zeros(shape=(1,n_classes))
     
-    name = "mnist"
+    name = "alpha"
 
     # Setup convolutional neural network
     nn1 = cnnet.NeuralNetwork(
@@ -61,7 +63,7 @@ def run():
     still_looping = True
     while still_looping:
         ii += 1
-        X_train, y_train = fetch_mnist_img()
+        X_train, y_train = fetch_alpha_img()
         
         ## the following three lines find the prediction for one image
         X = X_train[0][0]
@@ -74,7 +76,7 @@ def run():
         
         print "stored value: " + str( int(y_train[0]))
         print("prediction:   " + str( pred ))
-        
+        print (show_ycharacter(pred))
         if int(pred) == int(y_train[0]):
             tot_right += 1
         
@@ -94,14 +96,7 @@ def shape_x(x):
                 xx.append(0)
     return xx
 
-def numeric_ymatrix(y, ln = 10):
-    lst = []
-    for i in range(ln):
-        if i == y:
-            lst.append(1)
-        else:
-            lst.append(0)
-    return lst
+
 
 def show_xvalues(xarray = [[]], index = 0):
     print ("show x values " + str(index))
@@ -119,23 +114,25 @@ def show_xvalues(xarray = [[]], index = 0):
         print("");
     print ("\n===========================\n")
 
-def fetch_mnist_img():
+
+def show_ycharacter(l):
+    mat = lp.ascii_ymatrix(LOAD.ALPHA)[l][1]
+    return mat
+    
+    
+def fetch_alpha_img():
     #conv.conv.print_test()
     # Fetch data
-    mnist = sklearn.datasets.fetch_mldata('MNIST original', data_home='./data')
-    split = 60000
-    X_train = np.reshape(mnist.data[:split], (-1, 1, 28, 28))/255.0
-    y_train = mnist.target[:split]
-    X_test = np.reshape(mnist.data[split:], (-1, 1, 28, 28))/255.0
-    y_test = mnist.target[split:]
-    n_classes = np.unique(y_train).size
-
+    t1, l1, files = lp.batch_load_alpha( 0,  1, True, [], LOAD.ALPHA)
+    
+    #dset = lp.get_dataset(load_type=LOAD.ALPHA)
+    X_train = t1 #dset[0]
+    y_train = l1 #dset[1]
+    
+    X_train = np.reshape(X_train, (-1, 1, 28, 28))
+    y_train = np.array(y_train)
     # Downsample training data
-    n_train_samples = 1 #3000
-    train_idxs = np.random.random_integers(0, split-1, n_train_samples)
-    #train_idxs = np.array([i for i in range(n_train_samples)])
-    X_train = X_train[train_idxs, ...]
-    y_train = y_train[train_idxs, ...]
+    n_train_samples = 1000 #3000
     return X_train, y_train
 
 if __name__ == '__main__':

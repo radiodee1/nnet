@@ -1,13 +1,18 @@
 import numpy as np
-#import enum_local as LOAD
-#import load_png_alpha as lp
+import enum_local as LOAD
+import load_png_alpha as lp
 
-def one_hot(labels): # , load_type = LOAD.NUMERIC):
-    classes = np.unique(labels)
-    n_classes = classes.size
-    #if load_type != LOAD.NUMERIC :
-    #    n_classes = len(lp.ascii_ymatrix(alphabet_set=load_type))
-    one_hot_labels = np.zeros(labels.shape + (n_classes,))
+def one_hot(labels , load_type ):#= LOAD.NUMERIC):
+    #print load_type
+    if load_type != LOAD.NUMERIC :
+        n_classes = len(lp.ascii_ymatrix(alphabet_set=load_type)) 
+        classes = np.unique(labels)
+        one_hot_labels = np.zeros(labels.shape + (n_classes,))
+        #print labels.shape, labels
+    else:
+        classes = np.unique(labels)
+        n_classes = classes.size
+        one_hot_labels = np.zeros(labels.shape + (n_classes,))
     for c in classes:
         one_hot_labels[labels == c, c] = 1
     return one_hot_labels
