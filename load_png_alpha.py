@@ -20,14 +20,15 @@ import getpass
 #import mnist_loader as mnistl
 import enum_local as LOAD
 
-def get_dataset(alphabet_set = False, 
+def get_dataset(alphabet_set = True, 
         test_only = False, 
         img_pickle_ld = False, 
         img_pickle_sv = False, 
         nist_stretch = 2,
         large_size = -1 ,
         save_filename = "",
-        randomize = False) :
+        randomize = True,
+        load_type = LOAD.ALPHANUMERIC) :
         
     epochs = 10
     if (save_filename != "") :
@@ -80,9 +81,11 @@ def get_dataset(alphabet_set = False,
             print('get dataset. ' + str(zz+1) + ' of ' + str(m))
             
             if (not alphabet_set) or load_type == LOAD.NUMERIC   :
+                '''
                 t1,l1, files = batch_load("normpic" , 1, 60000, randomize=randomize); ## 60000
                 t2,l2, files = batch_load("normvalid", 1, 5000, randomize = randomize);
                 t3,l3 ,files = batch_load("normtest", 1,  5000, randomize = randomize);
+                '''
                 print "load numeric"
             if alphabet_set and (not load_type == LOAD.NUMERIC) :
                 
@@ -148,7 +151,7 @@ def get_dataset(alphabet_set = False,
         plocal.save_pickle_img(  [[[t1, l1]]]  ,[],[], filename = save_filename );
         print('\nImage Pickle Save: only works for small image sets!')
         print('(it hogs memory and will freeze your computer.)')
-    return rval_array , epochs, nist_stretch, load_type
+    return rval_array[0][0] #, epochs, nist_stretch, load_type
 
 
 	
@@ -283,7 +286,7 @@ def get_number(filename, load_type ):
             newindex = i
     return newindex, index
 
-def ascii_ymatrix(alphabet_set ) :
+def ascii_ymatrix(alphabet_set=LOAD.ALPHANUMERIC ) :
     mat = []
     a_upper = 65 ## ascii for 'A'
     a_lower = 97 ## ascii for 'a'

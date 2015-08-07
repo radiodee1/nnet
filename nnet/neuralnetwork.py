@@ -3,7 +3,7 @@ import scipy as sp
 import cPickle, os
 from .layers import ParamMixin
 from .helpers import one_hot, unhot
-
+import enum_local as LOAD
 
 class NeuralNetwork:
     def __init__(self, layers, rng=None):
@@ -23,7 +23,7 @@ class NeuralNetwork:
             raise ValueError('Output shape %s does not match Y %s'
                              % (next_shape, Y.shape))
 
-    def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64, name="mnist"):
+    def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64, name="mnist", load_type = LOAD.NUMERIC):
         """ Train network on the given data. """
         n_samples = Y.shape[0]
         n_batches = n_samples // batch_size
