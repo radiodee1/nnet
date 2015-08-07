@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import time
+import time, signal, sys
 import numpy as np
 import sklearn.datasets
 import nnet.neuralnetwork as cnnet
@@ -9,6 +9,19 @@ import nnet.convnet.layers as conv
 import nnet.layers as lnnet
 
 def run():
+
+    def signal_handler(signal, frame) :
+        print(" you want to exit!")
+        for layer in nn.layers:
+            if (isinstance(layer, lnnet.ParamMixin)) : print "len: " + str(len(layer.W))
+        if True  :
+            print("save weights.")
+            sys.stdout.flush()
+            nn.save_file(name="mnist")
+        sys.exit(0)
+
+    signal.signal(signal.SIGINT,signal_handler)
+
     #conv.conv.print_test()
     # Fetch data
     mnist = sklearn.datasets.fetch_mldata('MNIST original', data_home='./data')
@@ -20,7 +33,7 @@ def run():
     n_classes = np.unique(y_train).size
 
     # Downsample training data
-    n_train_samples = 100 #3000
+    n_train_samples = 1000 #3000
     train_idxs = np.random.random_integers(0, split-1, n_train_samples)
     #train_idxs = np.array([i for i in range(n_train_samples)])
     X_train = X_train[train_idxs, ...]
@@ -63,7 +76,7 @@ def run():
 
     # Train neural network
     t0 = time.time()
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=3, batch_size=32, name=name)
+    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=10, batch_size=32, name=name)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 

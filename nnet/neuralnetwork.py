@@ -138,7 +138,7 @@ class NeuralNetwork:
                 f2 = file(str('../nn/'+name+'-bias'+ str(level) +'.save'), 'wb')
                 cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
                 f2.close()
-                if True:
+                if False:
                     # pickle W and b
                     dW, db = layer.param_incs()
                     f3 = file(str('../nn/'+name+'-d-weights'+ str(level) +'.save'), 'wb')

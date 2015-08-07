@@ -13,14 +13,14 @@ from nnet.helpers import one_hot, unhot
 def run():
     
     #X_train, y_train = fetch_mnist_img()
-    X_train = np.zeros(shape=(1,1,28,28))
-    y_train = np.zeros(shape=(1))
-    
     n_classes = 10
+    X_setup = np.zeros(shape=(1,1,28,28))
+    y_setup = np.zeros(shape=(1,n_classes))
+    
     name = "mnist"
 
     # Setup convolutional neural network
-    nn = cnnet.NeuralNetwork(
+    nn1 = cnnet.NeuralNetwork(
         layers=[
             conv.Conv(
                 n_feats=12,
@@ -52,28 +52,25 @@ def run():
             lnnet.LogRegression(),
         ],
     )
-
+    
+    nn1._setup(X_setup, y_setup)
+    nn1.load_file(name=name)
+        
     still_looping = True
     while still_looping:
         X_train, y_train = fetch_mnist_img()
-
-        Y_one_hot = numeric_ymatrix(y_train[0], n_classes) 
-        Y_one_hot = np.array(Y_one_hot)
-        Y = np.reshape(Y_one_hot,(1,10))
         
+        ## the following three lines find the prediction for one image
         X = X_train[0][0]
         X = np.reshape(X,(-1,1,28,28))
-        
-        nn._setup(X, Y)
-        nn.load_file(name=name)
+        pred = nn1.predict(X)[0]
         
         ## the following two lines are just for textual display
         X_disp = shape_x(X_train[0][0])
         show_xvalues([X_disp], index=0)
         
         print "stored value: " + str( int(y_train[0]))
-        print Y
-        print("prediction: " + str( nn.predict(X)[0]))
+        print("prediction:   " + str( pred ))
         
         xx = raw_input("more? (Y/n): ")
         if xx.strip() == 'n' or xx.strip() == 'N' : still_looping = False
