@@ -25,17 +25,9 @@ def run():
 
     signal.signal(signal.SIGINT,signal_handler)
 
-    #conv.conv.print_test()
+
     # Fetch data
-    '''
-    mnist = sklearn.datasets.fetch_mldata('MNIST original', data_home='./data')
-    split = 60000
-    X_train = np.reshape(mnist.data[:split], (-1, 1, 28, 28))/255.0
-    y_train = mnist.target[:split]
-    X_test = np.reshape(mnist.data[split:], (-1, 1, 28, 28))/255.0
-    y_test = mnist.target[split:]
-    n_classes = np.unique(y_train).size
-    '''
+    
     
     dset = lp.get_dataset(load_type=LOAD.ALPHA)
     X_train = dset[0]
@@ -45,16 +37,8 @@ def run():
     y_train = np.array(y_train)
     # Downsample training data
     n_train_samples = 1000 #3000
-    '''
-    train_idxs = np.random.random_integers(0, split-1, n_train_samples)
-    #train_idxs = np.array([i for i in range(n_train_samples)])
-    X_train = X_train[train_idxs, ...]
-    y_train = y_train[train_idxs, ...]
-    '''
     
     n_classes = len(lp.ascii_ymatrix(LOAD.ALPHA))
-
-    print n_classes, "classes"
 
     # Setup convolutional neural network
     nn = cnnet.NeuralNetwork(
