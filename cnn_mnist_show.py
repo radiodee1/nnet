@@ -11,24 +11,11 @@ import math, sys
 from nnet.helpers import one_hot, unhot
 
 def run():
-    '''
-    # Fetch data
-    mnist = sklearn.datasets.fetch_mldata('MNIST original', data_home='./data')
-    split = 60000
-    X_train = np.reshape(mnist.data[:split], (-1, 1, 28, 28))/255.0
-    y_train = mnist.target[:split]
-    X_test = np.reshape(mnist.data[split:], (-1, 1, 28, 28))/255.0
-    y_test = mnist.target[split:]
-    n_classes = np.unique(y_train).size
-
-    # Downsample training data
-    n_train_samples = 1 #3000
-    train_idxs = np.random.random_integers(0, split-1, n_train_samples)
-    #train_idxs = np.array([i for i in range(n_train_samples)])
-    X_train = X_train[train_idxs, ...]
-    y_train = y_train[train_idxs, ...]
-    '''
-    X_train, y_train = fetch_mnist_img()
+    
+    #X_train, y_train = fetch_mnist_img()
+    X_train = np.zeros(shape=(1,1,28,28))
+    y_train = np.zeros(shape=(1))
+    
     n_classes = 10
     name = "mnist"
 
