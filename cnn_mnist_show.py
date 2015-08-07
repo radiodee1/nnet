@@ -53,8 +53,8 @@ def run():
         ],
     )
 
-    done_looping = True
-    while done_looping:
+    still_looping = True
+    while still_looping:
         X_train, y_train = fetch_mnist_img()
 
         Y_one_hot = numeric_ymatrix(y_train[0], n_classes) 
@@ -76,7 +76,7 @@ def run():
         print("prediction: " + str( nn.predict(X)[0]))
         
         xx = raw_input("more? (Y/n): ")
-        if xx.strip() == 'n' or xx.strip() == 'N' : done_looping = False
+        if xx.strip() == 'n' or xx.strip() == 'N' : still_looping = False
 
 
 def shape_x(x):
