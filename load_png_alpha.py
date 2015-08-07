@@ -18,12 +18,12 @@ from os.path import expanduser
 import getpass
 #import pickle_local as plocal
 #import mnist_loader as mnistl
-#from enum_local import LOAD
+import enum_local as LOAD
 
 def get_dataset(alphabet_set = False, 
         test_only = False, 
-        img_pickle_ld = True, 
-        img_pickle_sv = True, 
+        img_pickle_ld = False, 
+        img_pickle_sv = False, 
         nist_stretch = 2,
         large_size = -1 ,
         save_filename = "",
@@ -265,7 +265,7 @@ def look_at_img( filename , i = 0, load_type =0):
     return oneimg, oneindex
 
 def get_number(filename, load_type ):
-    mat = ascii_matrix(load_type)
+    mat = ascii_ymatrix(load_type)
     newindex = 0
     index = 0
     l_bmp = len('.bmp')  ## discard this many chars for ending
@@ -283,7 +283,7 @@ def get_number(filename, load_type ):
             newindex = i
     return newindex, index
 
-def ascii_matrix(alphabet_set ) :
+def ascii_ymatrix(alphabet_set ) :
     mat = []
     a_upper = 65 ## ascii for 'A'
     a_lower = 97 ## ascii for 'a'
@@ -306,76 +306,4 @@ def ascii_matrix(alphabet_set ) :
         raise RuntimeError
     #print(len(mat))
     return mat
-
-
-def shared_dataset(data_xy, borrow=True):
-    data_x, data_y = data_xy
-    shared_x = theano.shared(numpy.asarray(data_x,
-        dtype=theano.config.floatX),
-        borrow=borrow)
-    shared_y = theano.shared(numpy.asarray(data_y,
-        dtype=theano.config.floatX), 
-        borrow=borrow)
-    return shared_x, T.cast(shared_y, 'int32')
-
-def show_xvalues(xarray = [[]], index = 0):
-    print ("show x values " + str(index))
-    xx = xarray[index]
-    ln = int(math.floor(math.sqrt(len(xx)))) 
-    #print (ln)
-    for x in range(1,ln):
-        for y in range(1, ln):
-            zzz = '#'
-            #zzz =int( xx[x* ln + y])
-            if int(xx[ x* ln + y]) == int( 0) : 
-                zzz = '.'
-            #print(zzz) 
-            sys.stdout.write(zzz)
-        print("");
-    print ("\n===========================\n")
-
-def parse_filename(filename=""):
-    nist_stretch = 2
-    large_size = 1
-    epochs = 10
-    split_filename = filename.split("/")
-    save_filename = split_filename[len(split_filename) - 1]
-    tag1 = "save"
-    tag2 = "x5K-images"
-    tag3 = "GB-limit"
-    tag4 = "epochs.save"
-    tag5 = "run" ## IMPLIED ALPHA-NUMERIC!!
-    tag6 = "alpha"
-    tag7 = "numeric"
-    s = save_filename.split("_")
-    #print(s)
-    load = False
-
-    load_type = 0
-    g = s[0].split("-")
-    s[0] = g[0]
-    if len(g) == 1 :
-        load_type = LOAD.ALPHANUMERIC
-        print("load both")
-    elif g[1] == tag6 :
-        load_type = LOAD.ALPHA
-        print("load alpha")
-    elif g[1] == tag7 :
-        load_type = LOAD.NUMERIC
-        print("load numeric")
-
-    if ( s[0] == tag1 and s[2] == tag2 and s[4] == tag3 and s[6] == tag4) :
-        nist_stretch = int(s[1].strip())
-        large_size = int(float(s[3].strip()) * float(math.pow(2,30)) ) #1000000000
-        epochs = int(s[5].strip())
-        load = True
-    elif (s[0] == tag5 and s[2] == tag2 and s[4] == tag3 and s[6] == tag4) :
-        nist_stretch = int(s[1].strip())
-        large_size = int(float(s[3].strip()) * float(math.pow(2,30)) ) #1000000000
-        epochs = int(s[5].strip())
-    else :
-        print("Poorly formed file name!")
-        exit();
-    return nist_stretch, large_size, epochs, save_filename, load , load_type;
-    
 
