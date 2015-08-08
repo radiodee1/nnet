@@ -61,12 +61,14 @@ class Linear(Layer, ParamMixin):
 
     def fprop(self, input):
         self.last_input = input
+        print ("lin")
         return np.dot(input, self.W) + self.b
 
     def bprop(self, output_grad):
         n = output_grad.shape[0]
         self.dW = np.dot(self.last_input.T, output_grad)/n - self.weight_decay*self.W
         self.db = np.mean(output_grad, axis=0)
+        print ('bprop lin')
         return np.dot(output_grad, self.W.T)
 
     def params(self):

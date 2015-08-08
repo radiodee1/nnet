@@ -12,6 +12,8 @@ class NeuralNetwork:
         if rng is None:
             rng = np.random.RandomState()
         self.rng = rng
+        self.name = "mnist"
+        self.interrupt = False
 
     def _setup(self, X, Y):
         # Setup layers sequentially
@@ -26,7 +28,7 @@ class NeuralNetwork:
 
     def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64, name="mnist", load_type = LOAD.NUMERIC):
         """ Train network on the given data. """
-        
+        self.name = name
         stamp = str("start stamp -- "+str(datetime.datetime.now()))
         self.append_status(name=name, message=stamp)
         
@@ -66,15 +68,25 @@ class NeuralNetwork:
                         for param, inc in zip(layer.params(),
                                               layer.param_incs()):
                             param -= learning_rate*inc
-
-            # Output training status
-            print("\nfind loss and error")
-            loss = self._loss(X, Y_one_hot)
-            error = self.error(X, Y)
-            message = str('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
-            self.append_status(name=name, message = message)
-            #print('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
-            self.save_file(name=name)
+                
+                modconst = 5
+                modnum = (b+1) % modconst
+                #print modnum
+                if b+1 > 1 and modnum == 0 and self.interrupt:
+                    message = ("Interrupt for training status...")
+                    self.append_status(name=self.name, message = message)
+                    self.status(iter,X,Y,Y_one_hot)
+                    
+            self.status(iter,X,Y,Y_one_hot)
+    
+    def status(self, iter,X,Y,Y_one_hot):
+        # Output training status
+        print("\nfind loss and error")
+        loss = self._loss(X, Y_one_hot)
+        error = self.error(X, Y)
+        message = str('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
+        self.append_status(name=self.name, message = message)
+        self.save_file(name=self.name)
 
     def _loss(self, X, Y_one_hot):
         X_next = X
@@ -96,6 +108,9 @@ class NeuralNetwork:
         Y_pred = self.predict(X)
         error = Y_pred != Y
         return np.mean(error)
+
+    def set_interrupt(interrupt):
+        self.interrupt = interrupt
 
     def check_gradients(self, X, Y):
         """ Helper function to test the parameter gradients for

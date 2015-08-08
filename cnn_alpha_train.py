@@ -11,7 +11,7 @@ import enum_local as LOAD
 import load_png_alpha as lp
 import datetime
 
-def run():
+def run(max_iter=10, n_train_samples=300):
     name = "alpha"
     print str(datetime.datetime.now())
     
@@ -27,7 +27,7 @@ def run():
 
     signal.signal(signal.SIGINT,signal_handler)
 
-    n_train_samples = 300 #3000
+    #n_train_samples = 3000 #3000
     # Fetch data
     
     
@@ -88,7 +88,8 @@ def run():
     
     # Train neural network
     t0 = time.time()
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=5, batch_size=64, name=name, load_type = LOAD.ALPHA)
+    if n_train_samples != 300 and False : nn.set_interrupt(True)
+    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=max_iter, batch_size=64, name=name, load_type = LOAD.ALPHA)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 
@@ -99,4 +100,11 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    max_iter = 1
+    n_train_samples = 300
+    ln = len(sys.argv)
+    if ln >= 2 : max_iter = int(sys.argv[1])
+    if ln >= 3 : n_train_samples = int(sys.argv[2])
+    if ln == 1 :
+        print("usage: " + sys.argv[0] +" <max-iter> <training-samples>")
+    run(max_iter=max_iter, n_train_samples=n_train_samples)
