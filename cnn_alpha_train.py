@@ -3,7 +3,7 @@
 
 import time, signal, sys
 import numpy as np
-import sklearn.datasets
+#import sklearn.datasets
 import nnet.neuralnetwork as cnnet
 import nnet.convnet.layers as conv
 import nnet.layers as lnnet
