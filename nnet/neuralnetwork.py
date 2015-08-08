@@ -185,3 +185,9 @@ class NeuralNetwork:
                         self.layers[i].db = loaded_obj4
                         print ("load " + path4)
             
+    def append_status(self, name, message):
+        filename = "status-" + name.strip() +".txt"
+        f = open(filename, 'a')
+        f.write(message)
+        print (message)
+        f.close()

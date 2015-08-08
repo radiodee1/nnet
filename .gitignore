@@ -54,3 +54,5 @@ docs/_build/
 
 data/
 examples/data/
+
+status-*.txt
