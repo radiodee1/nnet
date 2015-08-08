@@ -84,7 +84,7 @@ def run():
 
     # Train neural network
     t0 = time.time()
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=3, batch_size=32, name=name, load_type = LOAD.ALPHA)
+    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=5, batch_size=32, name=name, load_type = LOAD.ALPHA)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 
