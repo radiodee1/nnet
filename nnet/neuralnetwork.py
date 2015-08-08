@@ -35,8 +35,11 @@ class NeuralNetwork:
         while iter < max_iter:
             iter += 1
             for b in range(n_batches):
-                print (str(b + 1) + " of " + str(n_batches) +" batches, iter " 
+                #print (str(b + 1) + " of " + str(n_batches) +" batches, iter " 
+                #    + str(iter) + " with total of "+ str(max_iter))
+                message = (str(b + 1) + " of " + str(n_batches) +" batches, iter " 
                     + str(iter) + " with total of "+ str(max_iter))
+                self.append_status(name=name, message=message)
                 batch_begin = b*batch_size
                 batch_end = batch_begin+batch_size
                 X_batch = X[batch_begin:batch_end]
@@ -64,7 +67,9 @@ class NeuralNetwork:
             print("\nfind loss and error")
             loss = self._loss(X, Y_one_hot)
             error = self.error(X, Y)
-            print('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
+            message = str('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
+            self.append_status(name=name, message = message)
+            #print('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
             self.save_file(name=name)
 
     def _loss(self, X, Y_one_hot):
@@ -186,6 +191,7 @@ class NeuralNetwork:
                         print ("load " + path4)
             
     def append_status(self, name, message):
+        message = message + "\n"
         filename = "status-" + name.strip() +".txt"
         f = open(filename, 'a')
         f.write(message)

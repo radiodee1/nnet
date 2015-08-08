@@ -9,9 +9,11 @@ import nnet.convnet.layers as conv
 import nnet.layers as lnnet
 import enum_local as LOAD
 import load_png_alpha as lp
+import datetime
 
 def run():
     name = "alpha"
+    print str(datetime.datetime.now())
     
     def signal_handler(signal, frame) :
         print(" you want to exit!")
@@ -82,6 +84,8 @@ def run():
         ],
     )
 
+    stamp = str("stamp -- "+str(datetime.datetime.now()))
+    nn.append_status(name=name, message=stamp)
     # Train neural network
     t0 = time.time()
     nn.fit(X_train, y_train, learning_rate=0.05, max_iter=5, batch_size=32, name=name, load_type = LOAD.ALPHA)
