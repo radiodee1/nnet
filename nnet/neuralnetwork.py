@@ -29,6 +29,7 @@ class NeuralNetwork:
     def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64, name="mnist", load_type = LOAD.NUMERIC):
         """ Train network on the given data. """
         self.name = name
+        
         stamp = str("start stamp -- "+str(datetime.datetime.now()))
         self.append_status(name=name, message=stamp)
         
@@ -81,10 +82,10 @@ class NeuralNetwork:
     
     def status(self, iter,X,Y,Y_one_hot):
         # Output training status
-        print("\nfind loss and error")
+        print("\nfind loss and error " + str(len(X)))
         loss = self._loss(X, Y_one_hot)
         error = self.error(X, Y)
-        message = str('iter %i, loss %.4f, train error %.4f' % (iter, loss, error))
+        message = str('iter %i, loss %.4f, train error %.4f - %i imgs' % (iter, loss, error, len(X)))
         self.append_status(name=self.name, message = message)
         self.save_file(name=self.name)
 
