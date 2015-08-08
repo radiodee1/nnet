@@ -35,9 +35,8 @@ class NeuralNetwork:
         while iter < max_iter:
             iter += 1
             for b in range(n_batches):
-                #print (str(b + 1) + " of " + str(n_batches) +" batches, iter " 
-                #    + str(iter) + " with total of "+ str(max_iter))
-                message = (str(b + 1) + " of " + str(n_batches) +" batches, iter " 
+                
+                message = (str(b + 1) + " of " + str(n_batches) +" batches (batch size="+str(batch_size)+"), iter " 
                     + str(iter) + " with total of "+ str(max_iter))
                 self.append_status(name=name, message=message)
                 batch_begin = b*batch_size
@@ -191,9 +190,9 @@ class NeuralNetwork:
                         print ("load " + path4)
             
     def append_status(self, name, message):
+        print (message)
         message = message + "\n"
         filename = "status-" + name.strip() +".txt"
         f = open(filename, 'a')
         f.write(message)
-        print (message)
         f.close()

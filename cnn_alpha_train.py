@@ -27,7 +27,7 @@ def run():
 
     signal.signal(signal.SIGINT,signal_handler)
 
-    n_train_samples = 100 #3000
+    n_train_samples = 300 #3000
     # Fetch data
     
     
@@ -88,7 +88,7 @@ def run():
     nn.append_status(name=name, message=stamp)
     # Train neural network
     t0 = time.time()
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=5, batch_size=32, name=name, load_type = LOAD.ALPHA)
+    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=5, batch_size=64, name=name, load_type = LOAD.ALPHA)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 
