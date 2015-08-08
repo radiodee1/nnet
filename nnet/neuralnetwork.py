@@ -4,6 +4,7 @@ import cPickle, os
 from .layers import ParamMixin
 from .helpers import one_hot, unhot
 import enum_local as LOAD
+import datetime
 
 class NeuralNetwork:
     def __init__(self, layers, rng=None):
@@ -25,6 +26,10 @@ class NeuralNetwork:
 
     def fit(self, X, Y, learning_rate=0.1, max_iter=10, batch_size=64, name="mnist", load_type = LOAD.NUMERIC):
         """ Train network on the given data. """
+        
+        stamp = str("start stamp -- "+str(datetime.datetime.now()))
+        self.append_status(name=name, message=stamp)
+        
         n_samples = Y.shape[0]
         n_batches = n_samples // batch_size
         Y_one_hot = one_hot(Y , load_type=load_type)
