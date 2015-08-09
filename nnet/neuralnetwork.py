@@ -73,12 +73,17 @@ class NeuralNetwork:
                 modconst = 5
                 modnum = (b+1) % modconst
                 #print modnum
-                if b+1 > 1 and modnum == 0 and self.interrupt:
-                    message = ("Interrupt for training status...")
-                    self.append_status(name=self.name, message = message)
-                    self.status(iter,X,Y,Y_one_hot)
+                if b+1 > 1 and modnum == 0 :
+                    if self.interrupt:
+                        message = ("Interrupt for training status...")
+                        self.append_status(name=self.name, message = message)
+                        self.status(iter,X,Y,Y_one_hot)
+                    else :
+                        message = ("periodic save...")
+                        self.append_status(name=self.name, message = message)
+                        self.save_file(name=self.name)
                     
-            self.status(iter,X,Y,Y_one_hot)
+            self.status(iter,X,Y,Y_one_hot) ##end
     
     def status(self, iter,X,Y,Y_one_hot):
         # Output training status
