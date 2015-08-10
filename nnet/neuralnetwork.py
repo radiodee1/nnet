@@ -5,6 +5,7 @@ from .layers import ParamMixin
 from .helpers import one_hot, unhot
 import enum_local as LOAD
 import datetime
+import store
 
 class NeuralNetwork:
     def __init__(self, layers, rng=None):
@@ -167,11 +168,17 @@ class NeuralNetwork:
                 #print(xx)
                 #print("save...")
                 if True:
-                    textw1 = str('../nn/'+name+'-w'+str(level)+'.npy')
-                    np.save(textw1, W)
-                    textb1 = str('../nn/'+name+'-b'+str(level)+'.npy')
-                    np.save(textb1, b)
-                if True:
+                    shapew1 = str('../nn/'+name+'_shape_w'+str(level)+'.txt')
+                    np.savetxt(shapew1, W.shape)
+                    shapeb1 = str('../nn/'+name+'_shape_b'+str(level)+'.txt')
+                    np.savetxt(shapeb1, b.shape)
+                    textw1 = str('../nn/'+name+'_w'+str(level)+'.txt')
+                    Wout, xshape = store.store_w(W)
+                    np.savetxt(textw1, Wout)
+                    textb1 = str('../nn/'+name+'_b'+str(level)+'.txt')
+                    bout , xshape = store.store_b(b)
+                    np.savetxt(textb1, bout)
+                if False:
                     # pickle W and b
                     f1 = file(str('../nn/'+name+'-weights'+ str(level) +'.save'), 'wb')
                     cPickle.dump(W, f1, protocol=cPickle.HIGHEST_PROTOCOL)
@@ -179,22 +186,14 @@ class NeuralNetwork:
                     f2 = file(str('../nn/'+name+'-bias'+ str(level) +'.save'), 'wb')
                     cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
                     f2.close()
-                if False:
-                    # pickle W and b
-                    dW, db = layer.param_incs()
-                    f3 = file(str('../nn/'+name+'-d-weights'+ str(level) +'.save'), 'wb')
-                    cPickle.dump(dW, f3, protocol=cPickle.HIGHEST_PROTOCOL)
-                    f3.close()
-                    f4 = file(str('../nn/'+name+'-d-bias'+ str(level) +'.save'), 'wb')
-                    cPickle.dump(db, f4, protocol=cPickle.HIGHEST_PROTOCOL)
-                    f4.close()
+                
         
         
     def load_file(self, name = "mnist"):
         #print len(self.layers)
         for i in range(len(self.layers)):
             if isinstance(self.layers[i], ParamMixin):
-                if False:
+                if True: ## convert old pickle files to new format...
                     path1 = str("../nn/"+name+"-weights" + str(i+1) + ".save")
                     if os.path.exists(path1):
                         f1 = file(path1, 'rb')
@@ -213,27 +212,21 @@ class NeuralNetwork:
                 if True:
                     #print(self.layers[i].W.shape)
                     #print(self.layers[i].b.shape)
-                    textw1 = str('../nn/'+name+'-w'+str(i+1)+'.npy')
-                    if os.path.exists(textw1):
-                        self.layers[i].W = np.load(textw1)
-                    textb1 = str('../nn/'+name+'-b'+str(i+1)+'.npy')
-                    if os.path.exists(textb1):
-                        self.layers[i].b = np.load(textb1)
-                if False:
-                    path3 = str("../nn/"+name+"-d-weights" + str(i+1) + ".save")
-                    if os.path.exists(path3):
-                        f3 = file(path3, 'rb')
-                        loaded_obj3 = cPickle.load(f3)
-                        f3.close()
-                        self.layers[i].dW = loaded_obj3
-                        print ("load " + path3)
-                    path4 = str("../nn/"+name+"-d-bias" + str(i+1) + ".save")
-                    if os.path.exists(path4):
-                        f4 = file(path4, 'rb')
-                        loaded_obj4 = cPickle.load(f4)
-                        f4.close()
-                        self.layers[i].db = loaded_obj4
-                        print ("load " + path4)
+                    textw1 = str('../nn/'+name+'_w'+str(i+1)+'.txt')
+                    shapew1 = str('../nn/'+name+'_shape_w'+str(i+1)+'.txt')
+                    if os.path.exists(textw1) and os.path.exists(shapew1):
+                        wshape = np.loadtxt(shapew1)
+                        wtext = np.loadtxt(textw1)
+                        self.layers[i].W = store.unstore_w(wtext, wshape)
+                        print 'w' + str(i+1)
+                    textb1 = str('../nn/'+name+'_b'+str(i+1)+'.txt')
+                    shapeb1 = str('../nn/'+name+'_shape_b'+str(i+1)+'.txt')
+                    if os.path.exists(textb1) and os.path.exists(shapeb1) :
+                        bshape = np.loadtxt(shapeb1)
+                        btext = np.loadtxt(textb1)
+                        self.layers[i].b = store.unstore_b(btext, bshape)
+                        print 'b' + str(i+1)
+                
             
     def append_status(self, name, message):
         print (message)
