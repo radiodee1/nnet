@@ -163,13 +163,22 @@ class NeuralNetwork:
             level += 1
             if isinstance(layer, ParamMixin):
                 W, b = layer.params()
-                # pickle W and b
-                f1 = file(str('../nn/'+name+'-weights'+ str(level) +'.save'), 'wb')
-                cPickle.dump(W, f1, protocol=cPickle.HIGHEST_PROTOCOL)
-                f1.close()
-                f2 = file(str('../nn/'+name+'-bias'+ str(level) +'.save'), 'wb')
-                cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
-                f2.close()
+                #xx = str(W)
+                #print(xx)
+                #print("save...")
+                if True:
+                    textw1 = str('../nn/'+name+'-w'+str(level)+'.npy')
+                    np.save(textw1, W)
+                    textb1 = str('../nn/'+name+'-b'+str(level)+'.npy')
+                    np.save(textb1, b)
+                if True:
+                    # pickle W and b
+                    f1 = file(str('../nn/'+name+'-weights'+ str(level) +'.save'), 'wb')
+                    cPickle.dump(W, f1, protocol=cPickle.HIGHEST_PROTOCOL)
+                    f1.close()
+                    f2 = file(str('../nn/'+name+'-bias'+ str(level) +'.save'), 'wb')
+                    cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
+                    f2.close()
                 if False:
                     # pickle W and b
                     dW, db = layer.param_incs()
@@ -185,20 +194,31 @@ class NeuralNetwork:
         #print len(self.layers)
         for i in range(len(self.layers)):
             if isinstance(self.layers[i], ParamMixin):
-                path1 = str("../nn/"+name+"-weights" + str(i+1) + ".save")
-                if os.path.exists(path1):
-                    f1 = file(path1, 'rb')
-                    loaded_obj1 = cPickle.load(f1)
-                    f1.close()
-                    self.layers[i].W = loaded_obj1
-                    print ("load " + path1)
-                path2 = str("../nn/"+name+"-bias" + str(i+1) + ".save")
-                if os.path.exists(path2):
-                    f2 = file(path2, 'rb')
-                    loaded_obj2 = cPickle.load(f2)
-                    f2.close()
-                    self.layers[i].b = loaded_obj2
-                    print ("load " + path2)
+                if False:
+                    path1 = str("../nn/"+name+"-weights" + str(i+1) + ".save")
+                    if os.path.exists(path1):
+                        f1 = file(path1, 'rb')
+                        loaded_obj1 = cPickle.load(f1)
+                        f1.close()
+                        self.layers[i].W = loaded_obj1
+                        print ("load " + path1)
+                    path2 = str("../nn/"+name+"-bias" + str(i+1) + ".save")
+                    if os.path.exists(path2):
+                        f2 = file(path2, 'rb')
+                        loaded_obj2 = cPickle.load(f2)
+                        f2.close()
+                        self.layers[i].b = loaded_obj2
+                        print ("load " + path2)
+                    
+                if True:
+                    #print(self.layers[i].W.shape)
+                    #print(self.layers[i].b.shape)
+                    textw1 = str('../nn/'+name+'-w'+str(i+1)+'.npy')
+                    if os.path.exists(textw1):
+                        self.layers[i].W = np.load(textw1)
+                    textb1 = str('../nn/'+name+'-b'+str(i+1)+'.npy')
+                    if os.path.exists(textb1):
+                        self.layers[i].b = np.load(textb1)
                 if False:
                     path3 = str("../nn/"+name+"-d-weights" + str(i+1) + ".save")
                     if os.path.exists(path3):
