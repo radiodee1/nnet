@@ -210,8 +210,7 @@ class NeuralNetwork:
                         print ("load " + path2)
                     
                 if True:
-                    #print(self.layers[i].W.shape)
-                    #print(self.layers[i].b.shape)
+                    ## load text files...
                     textw1 = str('../nn/'+name+'_w'+str(i+1)+'.txt')
                     shapew1 = str('../nn/'+name+'_shape_w'+str(i+1)+'.txt')
                     if os.path.exists(textw1) and os.path.exists(shapew1):
