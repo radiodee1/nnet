@@ -16,6 +16,7 @@ class NeuralNetwork:
         self.name = "mnist"
         self.interrupt = False
         self.android_load = False
+        self.nn_dir = "../nn/"
 
     def _setup(self, X, Y):
         # Setup layers sequentially
@@ -173,22 +174,22 @@ class NeuralNetwork:
                 W, b = layer.params()
                 
                 if not self.android_load :
-                    shapew1 = str('../nn/'+name+'_shape_w'+str(level)+'.txt')
+                    shapew1 = str(self.nn_dir+name+'_shape_w'+str(level)+'.txt')
                     np.savetxt(shapew1, W.shape)
-                    shapeb1 = str('../nn/'+name+'_shape_b'+str(level)+'.txt')
+                    shapeb1 = str(self.nn_dir+name+'_shape_b'+str(level)+'.txt')
                     np.savetxt(shapeb1, b.shape)
-                    textw1 = str('../nn/'+name+'_w'+str(level)+'.txt')
+                    textw1 = str(self.nn_dir+name+'_w'+str(level)+'.txt')
                     Wout, xshape = store.store_w(W)
                     np.savetxt(textw1, Wout)
-                    textb1 = str('../nn/'+name+'_b'+str(level)+'.txt')
+                    textb1 = str(self.nn_dir+name+'_b'+str(level)+'.txt')
                     bout , xshape = store.store_b(b)
                     np.savetxt(textb1, bout)
                 if False:
                     # pickle W and b
-                    f1 = file(str('../nn/'+name+'-weights'+ str(level) +'.save'), 'wb')
+                    f1 = file(str(self.nn_dir+name+'-weights'+ str(level) +'.save'), 'wb')
                     cPickle.dump(W, f1, protocol=cPickle.HIGHEST_PROTOCOL)
                     f1.close()
-                    f2 = file(str('../nn/'+name+'-bias'+ str(level) +'.save'), 'wb')
+                    f2 = file(str(self.nn_dir+name+'-bias'+ str(level) +'.save'), 'wb')
                     cPickle.dump(b, f2, protocol=cPickle.HIGHEST_PROTOCOL)
                     f2.close()
                 
@@ -199,14 +200,14 @@ class NeuralNetwork:
         for i in range(len(self.layers)):
             if isinstance(self.layers[i], ParamMixin):
                 if False: ## convert old pickle files to new format...
-                    path1 = str("../nn/"+name+"-weights" + str(i+1) + ".save")
+                    path1 = str(self.nn_dir+name+"-weights" + str(i+1) + ".save")
                     if os.path.exists(path1):
                         f1 = file(path1, 'rb')
                         loaded_obj1 = cPickle.load(f1)
                         f1.close()
                         self.layers[i].W = loaded_obj1
                         print ("load " + path1)
-                    path2 = str("../nn/"+name+"-bias" + str(i+1) + ".save")
+                    path2 = str(self.nn_dir+name+"-bias" + str(i+1) + ".save")
                     if os.path.exists(path2):
                         f2 = file(path2, 'rb')
                         loaded_obj2 = cPickle.load(f2)
@@ -216,15 +217,15 @@ class NeuralNetwork:
                     
                 if not self.android_load :
                     ## load text files...
-                    textw1 = str('../nn/'+name+'_w'+str(i+1)+'.txt')
-                    shapew1 = str('../nn/'+name+'_shape_w'+str(i+1)+'.txt')
+                    textw1 = str(self.nn_dir+name+'_w'+str(i+1)+'.txt')
+                    shapew1 = str(self.nn_dir+name+'_shape_w'+str(i+1)+'.txt')
                     if os.path.exists(textw1) and os.path.exists(shapew1):
                         wshape = np.loadtxt(shapew1)
                         wtext = np.loadtxt(textw1)
                         self.layers[i].W = store.unstore_w(wtext, wshape)
                         print 'w' + str(i+1)
-                    textb1 = str('../nn/'+name+'_b'+str(i+1)+'.txt')
-                    shapeb1 = str('../nn/'+name+'_shape_b'+str(i+1)+'.txt')
+                    textb1 = str(self.nn_dir+name+'_b'+str(i+1)+'.txt')
+                    shapeb1 = str(self.nn_dir+name+'_shape_b'+str(i+1)+'.txt')
                     if os.path.exists(textb1) and os.path.exists(shapeb1) :
                         bshape = np.loadtxt(shapeb1)
                         btext = np.loadtxt(textb1)
