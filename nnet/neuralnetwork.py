@@ -94,7 +94,7 @@ class NeuralNetwork:
         error = self.error(X, Y)
         message = str('iter %i, loss %.4f, train error %.4f - %i imgs' % (iter, loss, error, len(X)))
         self.append_status(name=self.name, message = message)
-        self.save_file(name=self.name)
+        if iter > 0 : self.save_file(name=self.name)
 
     def _loss(self, X, Y_one_hot):
         X_next = X
@@ -117,10 +117,13 @@ class NeuralNetwork:
         error = Y_pred != Y
         return np.mean(error)
 
-    def set_interrupt(interrupt):
+    def set_interrupt(self,interrupt):
         self.interrupt = interrupt
         
-    def set_android_load(val) :
+    def set_name(self,name):
+        self.name = name
+        
+    def set_android_load(self,val) :
         self.android_load = val
 
     def check_gradients(self, X, Y):

@@ -7,6 +7,7 @@ import numpy as np
 import nnet.neuralnetwork as cnnet
 import nnet.convnet.layers as conv
 import nnet.layers as lnnet
+from nnet.helpers import one_hot
 import enum_local as LOAD
 import load_png_alpha as lp
 import datetime
@@ -89,7 +90,16 @@ def run(max_iter=10, n_train_samples=300):
     # Train neural network
     t0 = time.time()
     if n_train_samples != 300 and False : nn.set_interrupt(True)
-    nn.fit(X_train, y_train, learning_rate=0.05, max_iter=max_iter, batch_size=64, name=name, load_type = LOAD.ALPHA)
+    if max_iter < 0 :
+        X = X_train
+        Y = y_train
+        Y_one_hot = one_hot(Y , load_type=LOAD.ALPHA)
+        nn.set_name(name)
+        nn._setup(X, Y_one_hot)
+        nn.load_file(name=name)
+        nn.status(-1,X,Y,Y_one_hot) ##end
+    else:
+        nn.fit(X_train, y_train, learning_rate=0.05, max_iter=max_iter, batch_size=64, name=name, load_type = LOAD.ALPHA)
     t1 = time.time()
     print('Duration: %.1fs' % (t1-t0))
 
@@ -107,4 +117,5 @@ if __name__ == '__main__':
     if ln >= 3 : n_train_samples = int(sys.argv[2])
     if ln == 1 :
         print("usage: " + sys.argv[0] +" <max-iter> <training-samples>")
+        print("negative max-iter skips fitting function!")
     run(max_iter=max_iter, n_train_samples=n_train_samples)
