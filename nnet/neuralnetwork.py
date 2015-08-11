@@ -15,6 +15,7 @@ class NeuralNetwork:
         self.rng = rng
         self.name = "mnist"
         self.interrupt = False
+        self.android_load = False
 
     def _setup(self, X, Y):
         # Setup layers sequentially
@@ -118,6 +119,9 @@ class NeuralNetwork:
 
     def set_interrupt(interrupt):
         self.interrupt = interrupt
+        
+    def set_android_load(val) :
+        self.android_load = val
 
     def check_gradients(self, X, Y):
         """ Helper function to test the parameter gradients for
@@ -165,7 +169,7 @@ class NeuralNetwork:
             if isinstance(layer, ParamMixin):
                 W, b = layer.params()
                 
-                if True:
+                if not self.android_load :
                     shapew1 = str('../nn/'+name+'_shape_w'+str(level)+'.txt')
                     np.savetxt(shapew1, W.shape)
                     shapeb1 = str('../nn/'+name+'_shape_b'+str(level)+'.txt')
@@ -207,7 +211,7 @@ class NeuralNetwork:
                         self.layers[i].b = loaded_obj2
                         print ("load " + path2)
                     
-                if True:
+                if not self.android_load :
                     ## load text files...
                     textw1 = str('../nn/'+name+'_w'+str(i+1)+'.txt')
                     shapew1 = str('../nn/'+name+'_shape_w'+str(i+1)+'.txt')
@@ -223,7 +227,8 @@ class NeuralNetwork:
                         btext = np.loadtxt(textb1)
                         self.layers[i].b = store.unstore_b(btext, bshape)
                         print 'b' + str(i+1)
-                
+                elif self.android_load :
+                    pass
             
     def append_status(self, name, message):
         print (message)
