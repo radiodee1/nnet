@@ -164,9 +164,7 @@ class NeuralNetwork:
             level += 1
             if isinstance(layer, ParamMixin):
                 W, b = layer.params()
-                #xx = str(W)
-                #print(xx)
-                #print("save...")
+                
                 if True:
                     shapew1 = str('../nn/'+name+'_shape_w'+str(level)+'.txt')
                     np.savetxt(shapew1, W.shape)
@@ -193,7 +191,7 @@ class NeuralNetwork:
         #print len(self.layers)
         for i in range(len(self.layers)):
             if isinstance(self.layers[i], ParamMixin):
-                if True: ## convert old pickle files to new format...
+                if False: ## convert old pickle files to new format...
                     path1 = str("../nn/"+name+"-weights" + str(i+1) + ".save")
                     if os.path.exists(path1):
                         f1 = file(path1, 'rb')
