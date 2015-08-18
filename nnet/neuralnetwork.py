@@ -16,7 +16,7 @@ class NeuralNetwork:
         self.name = "mnist"
         self.interrupt = False
         self.android_load = False
-        self.nn_dir = "../nn/"
+        self.nn_dir = "../nn-best/"
 
     def _setup(self, X, Y):
         # Setup layers sequentially

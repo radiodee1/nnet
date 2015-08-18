@@ -78,6 +78,11 @@ def run(max_iter=10, n_train_samples=300):
             lnnet.Activation('relu'),
             conv.Flatten(),
             lnnet.Linear(
+                n_out=500,
+                weight_scale=0.1,
+                weight_decay=0.02,
+            ),
+            lnnet.Linear(
                 n_out=n_classes,
                 weight_scale=0.1,
                 weight_decay=0.02,
