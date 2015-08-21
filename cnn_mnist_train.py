@@ -73,6 +73,7 @@ def run(max_iter=10, n_train_samples=300):
                 weight_scale=0.1,
                 weight_decay=0.02,
             ),
+            lnnet.Activation('relu'),
             lnnet.Linear(
                 n_out=n_classes,
                 weight_scale=0.1,
