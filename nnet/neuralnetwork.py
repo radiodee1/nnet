@@ -184,6 +184,7 @@ class NeuralNetwork:
                     textb1 = str(self.nn_dir+name+'_b'+str(level)+'.txt')
                     bout , xshape = store.store_b(b)
                     np.savetxt(textb1, bout)
+                    print (str (level) + " save.")
                 if False:
                     # pickle W and b
                     f1 = file(str(self.nn_dir+name+'-weights'+ str(level) +'.save'), 'wb')
