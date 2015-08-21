@@ -33,7 +33,7 @@ class NeuralNetwork:
         """ Train network on the given data. """
         self.name = name
         
-        stamp = str("start stamp -- "+str(datetime.datetime.now()))
+        stamp = str(" -- start stamp -- ") 
         self.append_status(name=name, message=stamp)
         
         n_samples = Y.shape[0]
@@ -236,7 +236,8 @@ class NeuralNetwork:
             
     def append_status(self, name, message):
         print (message)
-        message = message + "\n"
+        time = "[" + str(datetime.datetime.now()) + "]"
+        message = time + "  " + message + "\n"
         filename = "status-" + name.strip() +".txt"
         f = open(filename, 'a')
         f.write(message)
